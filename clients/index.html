@@ -8,6 +8,9 @@
 <body>
     Client1
     <button onclick="sendMessage()">Send Msg</button>
+    
+    <input id="sendCustom" type="text"><button onclick="sendCustom()">Send</button>
+    
 </body>
 <script>
     // Create WebSocket connection.
@@ -25,6 +28,17 @@
 
     const sendMessage = () => {
         socket.send('Hello From Client1!');
+        
+ 
+
+    fetch('http://localhost:3000/')
+        .then((data) => console.log(data.text().then((text)=> console.log(text))))
+    }
+
+    const sendCustom = () => {
+       let message = document.getElementById('sendCustom').value
+       console.log(message)
+       socket.send(message)
     }
 </script>
 </html>
