@@ -24,8 +24,6 @@ socket.addEventListener("message", async function (event) {
 
   let client1 = document.getElementById("client1");
   let client2 = document.getElementById("client2");
-  console.log(client1info);
-  console.log(client2info);
   client1info.client == "Client1" && client1info.value == true
     ? (client1.style.background = "green")
     : (client1.style.background = "red");
