@@ -2,7 +2,7 @@ import TOKEN from "../config/config.js";
 
 console.log(TOKEN);
 
-const socket = new WebSocket("ws://localhost:3000", TOKEN);
+const socket = new WebSocket("ws://localhost:3000", [TOKEN, "App"]);
 
 // Connection opened
 socket.addEventListener("open", function (event) {

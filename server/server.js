@@ -4,6 +4,7 @@ const server = require("http").createServer(app);
 const WebSocket = require("ws");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const { platform } = require("os");
 let clientCounter = 1;
 dotenv.config();
 
@@ -21,9 +22,9 @@ wss.getUniqueID = function () {
 };
 
 wss.on("connection", function connection(ws, req) {
+  let clientName = req.headers["sec-websocket-protocol"].split(", ");
   console.log("A new client Connected!");
-  ws.id = `Client${clientCounter}`;
-  clientCounter++;
+  clientName[1] ? (ws.id = clientName[1]) : ws.id == clientName[0];
 
   wss.clients.forEach(function each(client) {
     console.log("Client.ID: " + client.id);

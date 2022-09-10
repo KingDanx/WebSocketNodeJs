@@ -1,6 +1,6 @@
 import TOKEN from "../config/config.js";
 // Create WebSocket connection.
-const socket = new WebSocket("ws://localhost:3000", TOKEN);
+const socket = new WebSocket("ws://localhost:3000", [TOKEN, "Client1"]);
 
 // Connection opened
 socket.addEventListener("open", function (event) {

@@ -1,7 +1,7 @@
 import TOKEN from "../config/config.js";
 let reviept;
 // Create WebSocket connection.
-const socket = new WebSocket("ws://localhost:3000", TOKEN);
+const socket = new WebSocket("ws://localhost:3000", [TOKEN, "Client2"]);
 console.log(socket);
 
 // Connection opened
@@ -25,6 +25,5 @@ window.sendMessage = function () {
 let switcher = false;
 
 setInterval(() => {
-  console.log(socket.readyState);
   socket.send(switcher);
 }, 200);
