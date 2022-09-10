@@ -4,8 +4,6 @@ const server = require("http").createServer(app);
 const WebSocket = require("ws");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const { platform } = require("os");
-let clientCounter = 1;
 let client1Val;
 let client2Val;
 dotenv.config();
@@ -45,13 +43,13 @@ wss.on("connection", function connection(ws, req) {
     if (client1Val == "true" && client2Val == "true") {
       wss.clients.forEach(function each(client) {
         if (client.id == "App" && client.readyState === 1) {
-          client.send("true");
+          client.send(`${ws.id}, true`);
         }
       });
     } else {
       wss.clients.forEach(function each(client) {
         if (client.id == "App" && client.readyState === 1) {
-          client.send("flase");
+          client.send(`${ws.id}, flase`);
         }
       });
     }
