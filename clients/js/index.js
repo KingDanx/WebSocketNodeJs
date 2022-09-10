@@ -34,8 +34,10 @@ window.sendCustom = function () {
 let switcher = false;
 
 setInterval(() => {
-  console.log(socket.readyState);
   socket.send(switcher);
 }, 200);
 
-window.changeSwitcher = function () {};
+window.changeSwitcher = function () {
+  switcher == false ? (switcher = true) : (switcher = false);
+  document.getElementById("switch-value").innerHTML = switcher;
+};
