@@ -1,5 +1,5 @@
 import TOKEN from "../config/config.js";
-
+let reviept;
 // Create WebSocket connection.
 const socket = new WebSocket("ws://localhost:3000", TOKEN);
 console.log(socket);
@@ -11,7 +11,7 @@ socket.addEventListener("open", function (event) {
 
 // Listen for messages
 socket.addEventListener("message", function (event) {
-  console.log("Message from server ", event.data);
+  console.log("Message from ", event.data);
 });
 
 socket.addEventListener("close", (event) => {
@@ -21,3 +21,10 @@ socket.addEventListener("close", (event) => {
 window.sendMessage = function () {
   socket.send("Hello From Client2!");
 };
+
+let switcher = false;
+
+setInterval(() => {
+  console.log(socket.readyState);
+  socket.send(switcher);
+}, 200);
