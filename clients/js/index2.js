@@ -26,4 +26,9 @@ let switcher = false;
 
 setInterval(() => {
   socket.send(switcher);
-}, 200);
+}, 500);
+
+window.changeSwitcher = function () {
+  switcher == false ? (switcher = true) : (switcher = false);
+  document.getElementById("switch-value").innerHTML = switcher;
+};

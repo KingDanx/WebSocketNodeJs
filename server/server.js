@@ -6,6 +6,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const { platform } = require("os");
 let clientCounter = 1;
+let client1Val;
+let client2Val;
 dotenv.config();
 
 app.use(cors());
@@ -33,15 +35,34 @@ wss.on("connection", function connection(ws, req) {
     ws.send("you moron");
     ws.terminate();
   }
-  ws.here;
+
   ws.on("message", function incoming(message) {
     console.log(`${ws.id}: ${message}`);
 
-    wss.clients.forEach(function each(client) {
-      if (client !== ws && client.readyState === 1) {
-        client.send(`Client${ws.id}: ${message}`);
-      }
-    });
+    ws.id == "Client1" ? (client1Val = message) : null;
+    ws.id == "Client2" ? (client2Val = message) : null;
+
+    if (client1Val == "true" && client2Val == "true") {
+      wss.clients.forEach(function each(client) {
+        if (client.id == "App" && client.readyState === 1) {
+          client.send("true");
+        }
+      });
+    } else {
+      wss.clients.forEach(function each(client) {
+        if (client.id == "App" && client.readyState === 1) {
+          client.send("flase");
+        }
+      });
+    }
+
+    //Send to all
+    // wss.clients.forEach(function each(client) {
+    //   console.log(client.id);
+    //   if (client == "App" && client.readyState === 1) {
+    //     client.send(message);
+    //   }
+    // });
   });
 });
 
