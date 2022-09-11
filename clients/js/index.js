@@ -2,13 +2,10 @@ import TOKEN from "../config/config.js";
 // Create WebSocket connection.
 const socket = new WebSocket("ws://localhost:3000", [TOKEN, "Client1"]);
 
-const reader = new FileReader();
-
 // Connection opened
 socket.addEventListener("open", function (event) {
   console.log("Connected to WS Server");
 });
-let dog;
 // Listen for messages
 socket.addEventListener("message", function (event) {
   console.log(event.data);

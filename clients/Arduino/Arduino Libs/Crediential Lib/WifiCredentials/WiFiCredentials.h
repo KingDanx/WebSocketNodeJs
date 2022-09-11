@@ -1,0 +1,5 @@
+#define SSID "Your SSID"
+#define PASSWORD "Your Password"
+#define PROTOCOL "Your Protocol"
+#define IP "Your IP"
+#define PORT "Your Port"

@@ -24,18 +24,19 @@ wss.getUniqueID = function () {
 wss.on("connection", function connection(ws, req) {
   let clientName = req.headers["sec-websocket-protocol"].split(", ");
   console.log("A new client Connected!");
-  clientName[1] ? (ws.id = clientName[1]) : ws.id == clientName[0];
-
+  clientName[1] ? (ws.id = clientName[1]) : (ws.id = clientName[0]);
   wss.clients.forEach(function each(client) {
     console.log("Client.ID: " + client.id);
   });
-  // if (ws.protocol !== process.env["TOKEN"]) {
-  //   ws.send("you moron");
-  //   ws.terminate();
-  // }
+  if (clientName[0] !== process.env["TOKEN"]) {
+    ws.send("you moron");
+    ws.terminate();
+  } else {
+    ws.send("welcome to my server");
+  }
 
   ws.on("message", function incoming(message) {
-    console.log(`${ws.id}: ${message}`);
+    //console.log(`${ws.id}: ${message}`);
 
     ws.id == "Client1" ? (client1Val = message) : null;
     ws.id == "Client2" ? (client2Val = message) : null;

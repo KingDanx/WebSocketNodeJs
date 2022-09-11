@@ -32,7 +32,7 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
 		Serial.printf("[WSc] get text: %s\n", payload);
 
 		// send message to server
-		// webSocket.sendTXT("message here");
+		webSocket.sendTXT("message here");
 		break;
 	case WStype_BIN:
 		Serial.printf("[WSc] get binary length: %u\n", length);
@@ -80,13 +80,14 @@ void setup()
 	}
 
 	// server address, port and URL
-	webSocket.begin("ws://localhost", 3000, "/", PROTOCOL);
+	webSocket.begin(IP, PORT, "/", PROTOCOL);
 
 	// event handler
 	webSocket.onEvent(webSocketEvent);
 
 	// use HTTP Basic Authorization this is optional remove if not needed
 	// webSocket.setAuthorization("user", "Password");
+  
 
 	// try ever 5000 again if connection has failed
 	webSocket.setReconnectInterval(5000);
@@ -96,6 +97,8 @@ void setup()
 	// expect pong from server within 3000 ms
 	// consider connection disconnected if pong is not received 2 times
 	webSocket.enableHeartbeat(15000, 3000, 2);
+
+  webSocket.sendTXT("message here from ardy");
 }
 
 void loop()
