@@ -29,10 +29,10 @@ wss.on("connection", function connection(ws, req) {
   wss.clients.forEach(function each(client) {
     console.log("Client.ID: " + client.id);
   });
-  if (ws.protocol !== process.env["TOKEN"]) {
-    ws.send("you moron");
-    ws.terminate();
-  }
+  // if (ws.protocol !== process.env["TOKEN"]) {
+  //   ws.send("you moron");
+  //   ws.terminate();
+  // }
 
   ws.on("message", function incoming(message) {
     console.log(`${ws.id}: ${message}`);

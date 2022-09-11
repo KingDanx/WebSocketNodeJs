@@ -11,8 +11,10 @@ socket.addEventListener("open", function (event) {
 let serverInfo;
 let client1info;
 let client2info;
+
 // Listen for messages
-socket.addEventListener("message", async function (event) {
+socket.addEventListener("message", function (event) {
+  //split incoming message into an array
   serverInfo = event.data.split(", ");
   serverInfo = {
     client: serverInfo[0],
@@ -22,6 +24,7 @@ socket.addEventListener("message", async function (event) {
     ? (client1info = { client: "Client1", value: serverInfo.value })
     : (client2info = { client: "Client2", value: serverInfo.value });
 
+  //style elements
   let client1 = document.getElementById("client1");
   let client2 = document.getElementById("client2");
   client1info.client == "Client1" && client1info.value == true
