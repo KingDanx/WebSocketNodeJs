@@ -98,10 +98,11 @@ void setup()
 	// consider connection disconnected if pong is not received 2 times
 	//webSocket.enableHeartbeat(15000, 3000, 2);
 
-  webSocket.sendTXT("message here from ardy");
 }
 
 void loop()
 {
 	webSocket.loop();
+  webSocket.sendTXT("Arduino1, false");
+  delay(500);
 }

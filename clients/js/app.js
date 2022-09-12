@@ -16,7 +16,7 @@ const connect = () => {
   // Listen for messages
   socket.addEventListener("message", function (event) {
     //split incoming message into an array
-    console.log(event.data);
+    //console.log(event.data);
     serverInfo = event.data.split(", ");
     serverInfo = {
       client: serverInfo[0],
@@ -41,6 +41,7 @@ const connect = () => {
     console.log("Disconnected from server");
     setTimeout(() => {
       socket.close();
+      clearInterval(clockInterval);
       connect();
     }, 2500);
   });
@@ -51,7 +52,7 @@ const connect = () => {
   let sec = 0;
   let sec2 = 0;
 
-  setInterval(() => {
+  const clockInterval = setInterval(() => {
     if (client1info.value == true && client2info.value == true) {
       sec++;
       if (sec > 9) {

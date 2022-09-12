@@ -44,13 +44,13 @@ wss.on("connection", function connection(ws, req) {
     if (client1Val == "true" && ws.id == "Client1") {
       wss.clients.forEach(function each(client) {
         if (client.id == "App" && client.readyState === 1) {
-          client.send(`${ws.id}, true`);
+          client.send(`${ws.id}, ${client1Val}`);
         }
       });
     } else if (client1Val == "false" && ws.id == "Client1") {
       wss.clients.forEach(function each(client) {
         if (client.id == "App" && client.readyState === 1) {
-          client.send(`${ws.id}, false`);
+          client.send(`${ws.id}, ${client1Val}`);
         }
       });
     }
@@ -58,13 +58,13 @@ wss.on("connection", function connection(ws, req) {
     if (client2Val == "true" && ws.id == "Client2") {
       wss.clients.forEach(function each(client) {
         if (client.id == "App" && client.readyState === 1) {
-          client.send(`${ws.id}, true`);
+          client.send(`${ws.id}, ${client2Val}`);
         }
       });
     } else if (client2Val == "false" && ws.id == "Client2") {
       wss.clients.forEach(function each(client) {
         if (client.id == "App" && client.readyState === 1) {
-          client.send(`${ws.id}, false`);
+          client.send(`${ws.id}, ${client2Val}`);
         }
       });
     }
