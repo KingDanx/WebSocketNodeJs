@@ -36,35 +36,35 @@ wss.on("connection", function connection(ws, req) {
   }
 
   ws.on("message", function incoming(message) {
-    //console.log(`${ws.id}: ${message}`);
+    console.log(`${ws.id}: ${message}`);
 
     ws.id == "Client1" ? (client1Val = message) : null;
     ws.id == "Client2" ? (client2Val = message) : null;
 
-    if (client1Val == "true") {
+    if (client1Val == "true" && ws.id == "Client1") {
       wss.clients.forEach(function each(client) {
         if (client.id == "App" && client.readyState === 1) {
-          client.send(`Client1, true`);
+          client.send(`${ws.id}, true`);
         }
       });
-    } else if (client1Val == "false") {
+    } else if (client1Val == "false" && ws.id == "Client1") {
       wss.clients.forEach(function each(client) {
         if (client.id == "App" && client.readyState === 1) {
-          client.send(`Client1, flase`);
+          client.send(`${ws.id}, false`);
         }
       });
     }
 
-    if (client2Val == "true") {
+    if (client2Val == "true" && ws.id == "Client2") {
       wss.clients.forEach(function each(client) {
         if (client.id == "App" && client.readyState === 1) {
-          client.send(`Client2, true`);
+          client.send(`${ws.id}, true`);
         }
       });
-    } else if (client2Val == "false") {
+    } else if (client2Val == "false" && ws.id == "Client2") {
       wss.clients.forEach(function each(client) {
         if (client.id == "App" && client.readyState === 1) {
-          client.send(`Client2, false`);
+          client.send(`${ws.id}, false`);
         }
       });
     }

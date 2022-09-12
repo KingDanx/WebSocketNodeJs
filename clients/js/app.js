@@ -15,6 +15,7 @@ let client2info;
 // Listen for messages
 socket.addEventListener("message", function (event) {
   //split incoming message into an array
+  console.log(event.data);
   serverInfo = event.data.split(", ");
   serverInfo = {
     client: serverInfo[0],
