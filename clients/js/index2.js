@@ -1,13 +1,9 @@
 import TOKEN from "../config/config.js";
 // Create WebSocket connection.
 
-const socket = new WebSocket("ws://localhost:3000", [TOKEN, "Client2"], {
-  reconnectInterval: 3000,
-});
-
-console.log(socket.reconnectInterval);
-
 const connect = () => {
+  const socket = new WebSocket("ws://localhost:3000", [TOKEN, "Client2"]);
+  const switcherInterval = setInterval(sendSwticher, 500);
   // Connection opened
   socket.addEventListener("open", function (event) {
     console.log("Connected to WS Server");
@@ -21,17 +17,20 @@ const connect = () => {
 
   socket.addEventListener("close", (event) => {
     console.log("Disconnected from server");
-    connect();
-    console.log(socket.readyState);
+    setTimeout(() => {
+      socket.close();
+      clearInterval(switcherInterval);
+      connect();
+    }, 2500);
   });
 
   window.sendMessage = function () {
     socket.send("Hello From Client2!");
   };
 
-  setInterval(() => {
+  function sendSwticher() {
     socket.send(switcher);
-  }, 500);
+  }
 };
 
 connect();

@@ -36,7 +36,7 @@ wss.on("connection", function connection(ws, req) {
   }
 
   ws.on("message", function incoming(message) {
-    console.log(`${ws.id}: ${message}`);
+    //console.log(`${ws.id}: ${message}`);
 
     ws.id == "Client1" ? (client1Val = message) : null;
     ws.id == "Client2" ? (client2Val = message) : null;
