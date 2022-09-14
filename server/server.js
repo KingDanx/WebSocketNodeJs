@@ -41,33 +41,30 @@ wss.on("connection", function connection(ws, req) {
     ws.id == "Client1" ? (client1Val = message) : null;
     ws.id == "Client2" ? (client2Val = message) : null;
 
-    if (client1Val == "true" && ws.id == "Client1") {
-      wss.clients.forEach(function each(client) {
-        if (client.id == "App" && client.readyState === 1) {
-          client.send(`${ws.id}, ${client1Val}`);
-        }
-      });
-    } else if (client1Val == "false" && ws.id == "Client1") {
-      wss.clients.forEach(function each(client) {
-        if (client.id == "App" && client.readyState === 1) {
-          client.send(`${ws.id}, ${client1Val}`);
-        }
-      });
-    }
+    const sendClientMsgToApp = (
+      clientVal,
+      clientName,
+      ifCase,
+      elseCase,
+      targetId
+    ) => {
+      if (clientVal == ifCase && ws.id == clientName) {
+        wss.clients.forEach(function each(client) {
+          if (client.id == targetId && client.readyState === 1) {
+            client.send(`${ws.id}, ${client1Val}`);
+          }
+        });
+      } else if (clientVal == elseCase && ws.id == clientName) {
+        wss.clients.forEach(function each(client) {
+          if (client.id == targetId && client.readyState === 1) {
+            client.send(`${ws.id}, ${client1Val}`);
+          }
+        });
+      }
+    };
 
-    if (client2Val == "true" && ws.id == "Client2") {
-      wss.clients.forEach(function each(client) {
-        if (client.id == "App" && client.readyState === 1) {
-          client.send(`${ws.id}, ${client2Val}`);
-        }
-      });
-    } else if (client2Val == "false" && ws.id == "Client2") {
-      wss.clients.forEach(function each(client) {
-        if (client.id == "App" && client.readyState === 1) {
-          client.send(`${ws.id}, ${client2Val}`);
-        }
-      });
-    }
+    sendClientMsgToApp(client1Val, "Client1", "true", "false", "App");
+    sendClientMsgToApp(client2Val, "Client2", "true", "false", "App");
 
     //Send to all
     // wss.clients.forEach(function each(client) {
