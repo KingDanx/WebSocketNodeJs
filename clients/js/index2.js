@@ -3,7 +3,7 @@ import TOKEN from "../config/config.js";
 
 const connect = () => {
   const socket = new WebSocket("ws://localhost:3000", [TOKEN, "Client2"]);
-  const switcherInterval = setInterval(sendSwticher, 500);
+  const switcherInterval = setInterval(sendSwticher, 100);
   // Connection opened
   socket.addEventListener("open", function (event) {
     console.log("Connected to WS Server");

@@ -36,17 +36,17 @@ wss.on("connection", function connection(ws, req) {
   }
 
   ws.on("message", function incoming(message) {
-    console.log(`${ws.id}: ${message}`);
+    //console.log(`${ws.id}: ${message}`);
 
     ws.id == "Client1" ? (client1Val = message) : null;
     ws.id == "Client2" ? (client2Val = message) : null;
 
     const sendClientMsgToApp = (
-      clientVal,
-      clientName,
-      ifCase,
-      elseCase,
-      targetId
+      clientVal = client1Val,
+      clientName = "Client1",
+      ifCase = "true",
+      elseCase = "false",
+      targetId = "App"
     ) => {
       if (clientVal == ifCase && ws.id == clientName) {
         wss.clients.forEach(function each(client) {
@@ -63,7 +63,7 @@ wss.on("connection", function connection(ws, req) {
       }
     };
 
-    sendClientMsgToApp(client1Val, "Client1", "true", "false", "App");
+    sendClientMsgToApp();
     sendClientMsgToApp(client2Val, "Client2", "true", "false", "App");
 
     //Send to all
