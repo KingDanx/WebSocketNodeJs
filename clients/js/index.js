@@ -16,11 +16,12 @@ const connect = () => {
   //Listen for close
   socket.addEventListener("close", (event) => {
     console.log("Disconnected from ", event);
-    setTimeout(() => {
+    const reconnectInterval = setInterval(() => {
       socket.close();
       clearInterval(switcherInterval);
+      clearInterval(reconnectInterval);
       connect();
-    }, 2500);
+    }, 1000);
   });
 
   window.sendMessage = function () {

@@ -16,7 +16,7 @@ const connect = () => {
   // Listen for messages
   socket.addEventListener("message", function (event) {
     //split incoming message into an array
-    //console.log(event.data);
+    console.log(event.data);
     serverInfo = event.data.split(", ");
     serverInfo = {
       client: serverInfo[0],
@@ -39,11 +39,12 @@ const connect = () => {
 
   socket.addEventListener("close", (event) => {
     console.log("Disconnected from server");
-    setTimeout(() => {
+    const reconnectInterval = setInterval(() => {
       socket.close();
       clearInterval(clockInterval);
+      clearInterval(reconnectInterval);
       connect();
-    }, 2500);
+    }, 1000);
   });
 
   //clock section

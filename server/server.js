@@ -36,7 +36,7 @@ wss.on("connection", function connection(ws, req) {
   }
 
   ws.on("message", function incoming(message) {
-    //console.log(`${ws.id}: ${message}`);
+    console.log(`${ws.id}: ${message}`);
 
     ws.id == "Client1" ? (client1Val = message) : null;
     ws.id == "Client2" ? (client2Val = message) : null;
@@ -51,13 +51,13 @@ wss.on("connection", function connection(ws, req) {
       if (clientVal == ifCase && ws.id == clientName) {
         wss.clients.forEach(function each(client) {
           if (client.id == targetId && client.readyState === 1) {
-            client.send(`${ws.id}, ${client1Val}`);
+            client.send(`${ws.id}, ${clientVal}`);
           }
         });
       } else if (clientVal == elseCase && ws.id == clientName) {
         wss.clients.forEach(function each(client) {
           if (client.id == targetId && client.readyState === 1) {
-            client.send(`${ws.id}, ${client1Val}`);
+            client.send(`${ws.id}, ${clientVal}`);
           }
         });
       }
