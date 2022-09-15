@@ -27,14 +27,22 @@ const connect = () => {
       : (client2info = { client: "Client2", value: serverInfo.value });
 
     //style elements
-    let client1 = document.getElementById("client1");
-    let client2 = document.getElementById("client2");
-    client1info.client == "Client1" && client1info.value == true
-      ? (client1.style.background = "green")
-      : (client1.style.background = "red");
-    client2info.client == "Client2" && client2info.value == true
-      ? (client2.style.background = "green")
-      : (client2.style.background = "red");
+    const styleClients = (
+      clientInfo = client1info,
+      clientName = "Client1",
+      clientHTMLid = "client1",
+      attribute = "background",
+      primaryValue = "green",
+      altValue = "red"
+    ) => {
+      let client = document.getElementById(clientHTMLid);
+      clientInfo.client == clientName && clientInfo.value == true
+        ? (client.style[attribute] = primaryValue)
+        : (client.style[attribute] = altValue);
+    };
+
+    styleClients();
+    styleClients(client2info, "Client2", "client2");
   });
 
   socket.addEventListener("close", (event) => {
@@ -43,7 +51,6 @@ const connect = () => {
       socket.close();
       clearInterval(clockInterval);
       clearInterval(reconnectInterval);
-      clearInterval(clearClockInterval);
       connect();
     }, 1000);
   });
@@ -56,6 +63,7 @@ const connect = () => {
 
   const clockInterval = setInterval(() => {
     if (client1info.value == true && client2info.value == true) {
+      clearClockInterval();
       sec++;
       if (sec > 9) {
         sec2++;
@@ -70,14 +78,17 @@ const connect = () => {
     clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
   }, 1000);
 
-  const clearClockInterval = setInterval(() => {
-    if (client1info.value == false || client2info.value == false) {
-      min = 0;
-      sec2 = 0;
-      sec = 0;
-      clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
-    }
-  }, 100);
+  const clearClockInterval = () => {
+    const killInterval = setInterval(() => {
+      if (client1info.value == false || client2info.value == false) {
+        min = 0;
+        sec2 = 0;
+        sec = 0;
+        clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
+        clearInterval(killInterval);
+      }
+    }, 100);
+  };
 };
 
 connect();
