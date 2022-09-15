@@ -43,6 +43,7 @@ const connect = () => {
       socket.close();
       clearInterval(clockInterval);
       clearInterval(reconnectInterval);
+      clearInterval(clearClockInterval);
       connect();
     }, 1000);
   });
@@ -65,14 +66,18 @@ const connect = () => {
         sec2 = 0;
         sec = 0;
       }
-    } else {
-      min = 0;
-      sec = 0;
-      sec2 = 0;
     }
-
     clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
   }, 1000);
+
+  const clearClockInterval = setInterval(() => {
+    if (client1info.value == false || client2info.value == false) {
+      min = 0;
+      sec2 = 0;
+      sec = 0;
+      clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
+    }
+  }, 100);
 };
 
 connect();
