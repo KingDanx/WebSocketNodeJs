@@ -24,7 +24,6 @@ wss.getUniqueID = function () {
 wss.on("connection", function connection(ws, req) {
   let clientName = req.headers["sec-websocket-protocol"].split(", ");
   console.log("A new client Connected!");
-  console.log(wss.clients);
   clientName[1] ? (ws.id = clientName[1]) : (ws.id = clientName[0]);
   wss.clients.forEach(function each(client) {
     console.log("Client.ID: " + client.id);
@@ -34,6 +33,7 @@ wss.on("connection", function connection(ws, req) {
     ws.terminate();
   } else {
     ws.send("welcome to my server");
+    console.log(wss.clients);
   }
 
   ws.on("message", function incoming(message) {
@@ -68,6 +68,10 @@ wss.on("connection", function connection(ws, req) {
     //     client.send(message);
     //   }
     // });
+  });
+
+  ws.on("close", (event) => {
+    console.log(`${ws.id} has disconnected`);
   });
 });
 
