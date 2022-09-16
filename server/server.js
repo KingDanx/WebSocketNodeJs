@@ -24,6 +24,7 @@ wss.getUniqueID = function () {
 wss.on("connection", function connection(ws, req) {
   let clientName = req.headers["sec-websocket-protocol"].split(", ");
   console.log("A new client Connected!");
+  console.log(wss.clients);
   clientName[1] ? (ws.id = clientName[1]) : (ws.id = clientName[0]);
   wss.clients.forEach(function each(client) {
     console.log("Client.ID: " + client.id);
@@ -37,24 +38,15 @@ wss.on("connection", function connection(ws, req) {
 
   ws.on("message", function incoming(message) {
     //console.log(`${ws.id}: ${message}`);
-
     ws.id == "Client1" ? (client1Val = message) : null;
     ws.id == "Client2" ? (client2Val = message) : null;
 
     const sendClientMsgToApp = (
       clientVal = client1Val,
       clientName = "Client1",
-      ifCase = "true",
-      elseCase = "false",
       targetId = "App"
     ) => {
-      if (clientVal == ifCase && ws.id == clientName) {
-        wss.clients.forEach(function each(client) {
-          if (client.id == targetId && client.readyState === 1) {
-            client.send(`${ws.id}, ${clientVal}`);
-          }
-        });
-      } else if (clientVal == elseCase && ws.id == clientName) {
+      if (ws.id == clientName) {
         wss.clients.forEach(function each(client) {
           if (client.id == targetId && client.readyState === 1) {
             client.send(`${ws.id}, ${clientVal}`);
@@ -63,8 +55,11 @@ wss.on("connection", function connection(ws, req) {
       }
     };
 
+    // wss.clients.forEach(function each(client){
+    //   sendClientMsgToApp()
+    // })
     sendClientMsgToApp();
-    sendClientMsgToApp(client2Val, "Client2", "true", "false", "App");
+    sendClientMsgToApp(client2Val, "Client2", "App");
 
     //Send to all
     // wss.clients.forEach(function each(client) {

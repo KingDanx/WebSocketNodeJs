@@ -16,7 +16,6 @@ const connect = () => {
   // Listen for messages
   socket.addEventListener("message", function (event) {
     //split incoming message into an array
-    //console.log(event.data);
     serverInfo = event.data.split(", ");
     serverInfo = {
       client: serverInfo[0],
@@ -27,7 +26,7 @@ const connect = () => {
       : (client2info = { client: "Client2", value: serverInfo.value });
 
     //style elements
-    const styleClients = (
+    const styleClient = (
       clientInfo = client1info,
       clientName = "Client1",
       clientHTMLid = "client1",
@@ -41,8 +40,10 @@ const connect = () => {
         : (client.style[attribute] = altValue);
     };
 
-    styleClients();
-    styleClients(client2info, "Client2", "client2");
+    styleClient();
+    styleClient(client2info, "Client2", "client2");
+
+    //console.log(event.data);
   });
 
   socket.addEventListener("close", (event) => {
