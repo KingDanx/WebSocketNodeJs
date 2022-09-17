@@ -27,8 +27,11 @@ const connect = () => {
       if (updateClientData != clientsArray) {
         clientsArray = updateClientData;
         clientsArray.map((el, i) => {
-          generateElement(undefined, undefined, undefined, undefined, `${el}`);
+          !document.getElementById(`${el}`)
+            ? generateElement(undefined, undefined, `${el}`, undefined, `${el}`)
+            : null;
         });
+        //^^Need to sort array so it always comes out the same ^^
       }
     }
 
