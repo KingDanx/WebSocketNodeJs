@@ -56,6 +56,7 @@ const connect = () => {
       altValue = "red"
     ) => {
       let client = document.getElementById(clientHTMLid);
+      if (!clientInfo) return;
       clientInfo.client == clientName && clientInfo.value == true
         ? (client.style[attribute] = primaryValue)
         : (client.style[attribute] = altValue);
@@ -84,20 +85,22 @@ const connect = () => {
   let sec2 = 0;
 
   const clockInterval = setInterval(() => {
-    if (client1info.value == true && client2info.value == true) {
-      clearClockInterval();
-      sec++;
-      if (sec > 9) {
-        sec2++;
-        sec = 0;
+    if (client1info && client2info) {
+      if (client1info.value == true && client2info.value == true) {
+        clearClockInterval();
+        sec++;
+        if (sec > 9) {
+          sec2++;
+          sec = 0;
+        }
+        if (sec2 >= 6) {
+          min++;
+          sec2 = 0;
+          sec = 0;
+        }
       }
-      if (sec2 >= 6) {
-        min++;
-        sec2 = 0;
-        sec = 0;
-      }
+      clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
     }
-    clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
   }, 1000);
 
   const clearClockInterval = () => {

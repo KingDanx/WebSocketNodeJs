@@ -79,6 +79,12 @@ wss.on("connection", function connection(ws, req) {
 
   ws.on("close", (event) => {
     console.log(`${ws.id} has disconnected`);
+    ws.id != "App" ? clientIds.splice(clientIds.indexOf(ws.id), 1) : null;
+    wss.clients.forEach(function each(client) {
+      if (client.id == "App" && client.readyState === 1) {
+        client.send(`clientsArr, ${clientIds.join(", ")}`);
+      }
+    });
   });
 });
 
