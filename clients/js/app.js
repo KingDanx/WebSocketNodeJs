@@ -27,13 +27,7 @@ const connect = () => {
       if (updateClientData != clientsArray) {
         clientsArray = updateClientData;
         clientsArray.map((el, i) => {
-          generateElement(
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            `test-${i}`
-          );
+          generateElement(undefined, undefined, undefined, undefined, `${el}`);
         });
       }
     }
