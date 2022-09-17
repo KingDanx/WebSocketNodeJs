@@ -34,13 +34,13 @@ wss.on("connection", function connection(ws, req) {
     ws.terminate();
   } else {
     ws.send("welcome to my server");
-    clientIds.push(ws.id);
+    ws.id != "App" ? clientIds.push(ws.id) : null;
     wss.clients.forEach(function each(client) {
       if (client.id == "App" && client.readyState === 1) {
         client.send(`clientsArr, ${clientIds.join(", ")}`);
       }
     });
-    //console.log(wss.clients);
+    //^^ Add logic to cut disconnect clients out and resend array ^^
   }
 
   ws.on("message", function incoming(message) {

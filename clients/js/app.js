@@ -18,14 +18,24 @@ const connect = () => {
 
   // Listen for messages
   socket.addEventListener("message", function (event) {
-    if (event.data.includes("clients")) {
+    //Check for connected clients update.
+    if (event.data.includes("clientsArr")) {
       updateClientData = event.data.split(", ");
       console.log(updateClientData);
       updateClientData.shift();
       console.log(updateClientData);
-      updateClientData != clientsArray
-        ? (clientsArray = updateClientData)
-        : null;
+      if (updateClientData != clientsArray) {
+        clientsArray = updateClientData;
+        clientsArray.map((el, i) => {
+          generateElement(
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            `test-${i}`
+          );
+        });
+      }
     }
 
     //split incoming message into an array
