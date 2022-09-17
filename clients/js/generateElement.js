@@ -21,6 +21,6 @@ export function generateElement(
   if (isDefined(parentEl)) parentEl.appendChild(el);
   return el;
 }
-function isDefined(obj) {
+export function isDefined(obj) {
   return obj !== undefined && obj != null;
 }

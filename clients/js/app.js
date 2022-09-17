@@ -1,5 +1,5 @@
 import TOKEN from "../config/config.js";
-import { generateElement } from "./generateElement.js";
+import { generateElement, isDefined } from "./generateElement.js";
 
 const connect = () => {
   const socket = new WebSocket("ws://localhost:3000", [TOKEN, "App"]);
@@ -27,10 +27,23 @@ const connect = () => {
       updateClientData.sort();
       console.log(updateClientData);
       if (updateClientData != clientsArray) {
-        clientsArray = updateClientData;
         clientsArray.map((el, i) => {
-          !document.getElementById(`${el}`)
-            ? generateElement(undefined, undefined, `${el}`, undefined, `${el}`)
+          isDefined(document.getElementById(`${el}-gen`))
+            ? document.getElementById(`${el}-gen`).remove()
+            : null;
+        });
+
+        clientsArray = updateClientData;
+
+        clientsArray.map((el, i) => {
+          !isDefined(document.getElementById(`${el}-gen`))
+            ? generateElement(
+                undefined,
+                undefined,
+                `${el}-gen`,
+                undefined,
+                `${el}`
+              )
             : null;
         });
       }
