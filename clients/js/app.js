@@ -1,4 +1,5 @@
 import TOKEN from "../config/config.js";
+import { generateElement } from "./generateElement.js";
 
 const connect = () => {
   const socket = new WebSocket("ws://localhost:3000", [TOKEN, "App"]);
@@ -9,17 +10,29 @@ const connect = () => {
     socket.send("App Connected");
   });
 
+  let clientsArray = [];
+  let updateClientData;
   let serverInfo;
   let client1info;
   let client2info;
 
   // Listen for messages
   socket.addEventListener("message", function (event) {
+    if (event.data.includes("clients")) {
+      updateClientData = event.data.split(", ");
+      console.log(updateClientData);
+      updateClientData.shift();
+      console.log(updateClientData);
+      updateClientData != clientsArray
+        ? (clientsArray = updateClientData)
+        : null;
+    }
+
     //split incoming message into an array
     serverInfo = event.data.split(", ");
     serverInfo = {
       client: serverInfo[0],
-      value: serverInfo[1] == "true",
+      value: serverInfo[1] == "true", //checking string value to return true or false bool
     };
     serverInfo.client == "Client1"
       ? (client1info = { client: "Client1", value: serverInfo.value })

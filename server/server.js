@@ -4,6 +4,7 @@ const server = require("http").createServer(app);
 const WebSocket = require("ws");
 const cors = require("cors");
 const dotenv = require("dotenv");
+let clientIds = [];
 let client1Val;
 let client2Val;
 dotenv.config();
@@ -33,7 +34,13 @@ wss.on("connection", function connection(ws, req) {
     ws.terminate();
   } else {
     ws.send("welcome to my server");
-    console.log(wss.clients);
+    clientIds.push(ws.id);
+    wss.clients.forEach(function each(client) {
+      if (client.id == "App" && client.readyState === 1) {
+        client.send(`clientsArr, ${clientIds.join(", ")}`);
+      }
+    });
+    //console.log(wss.clients);
   }
 
   ws.on("message", function incoming(message) {
