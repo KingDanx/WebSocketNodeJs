@@ -24,6 +24,8 @@ const connect = () => {
       console.log(updateClientData);
       updateClientData.shift();
       console.log(updateClientData);
+      updateClientData.sort();
+      console.log(updateClientData);
       if (updateClientData != clientsArray) {
         clientsArray = updateClientData;
         clientsArray.map((el, i) => {
@@ -31,7 +33,6 @@ const connect = () => {
             ? generateElement(undefined, undefined, `${el}`, undefined, `${el}`)
             : null;
         });
-        //^^Need to sort array so it always comes out the same ^^
       }
     }
 
