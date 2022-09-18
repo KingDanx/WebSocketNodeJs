@@ -1,8 +1,8 @@
 import TOKEN from "../config/config.js";
 // Create WebSocket connection.
 
-const connect = () => {
-  const socket = new WebSocket("ws://localhost:3000", [TOKEN, "Client1"]);
+const connect = (ipPort, clientName) => {
+  const socket = new WebSocket(ipPort, [TOKEN, clientName]);
   const switcherInterval = setInterval(sendSwticher, 100);
   // Connection opened
   socket.addEventListener("open", function (event) {
@@ -43,7 +43,7 @@ const connect = () => {
   }
 };
 
-connect();
+connect("ws://localhost:3000", "Client1");
 
 let switcher = false;
 
