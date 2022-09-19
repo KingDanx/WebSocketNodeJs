@@ -5,8 +5,10 @@ const WebSocket = require("ws");
 const cors = require("cors");
 const dotenv = require("dotenv");
 let clientIds = [];
+let clientVal;
 let client1Val;
 let client2Val;
+let client3Val;
 dotenv.config();
 
 app.use(cors());
@@ -45,8 +47,10 @@ wss.on("connection", function connection(ws, req) {
 
   ws.on("message", function incoming(message) {
     //console.log(`${ws.id}: ${message}`);
-    ws.id == "Client1" ? (client1Val = message) : null;
-    ws.id == "Client2" ? (client2Val = message) : null;
+
+    clientIds.map((el, i) => {
+      ws.id == el ? (clientVal = message) : null;
+    });
 
     const sendClientMsgToApp = (
       clientVal = client1Val,
@@ -62,11 +66,9 @@ wss.on("connection", function connection(ws, req) {
       }
     };
 
-    // wss.clients.forEach(function each(client){
-    //   sendClientMsgToApp()
-    // })
-    sendClientMsgToApp();
-    sendClientMsgToApp(client2Val, "Client2", "App");
+    clientIds.map((el, i) => {
+      sendClientMsgToApp(clientVal, el);
+    });
 
     //Send to all
     // wss.clients.forEach(function each(client) {

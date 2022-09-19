@@ -11,21 +11,21 @@ const connect = () => {
   });
 
   let clientsArray = [];
+  let clientInfoArray = [];
   let updateClientData;
   let serverInfo;
   let client1info;
   let client2info;
+  let client3info;
+  let client4info;
 
   // Listen for messages
   socket.addEventListener("message", function (event) {
     //Check for connected clients update.
     if (event.data.includes("clientsArr")) {
       updateClientData = event.data.split(", ");
-      console.log(updateClientData);
       updateClientData.shift();
-      console.log(updateClientData);
       updateClientData.sort();
-      console.log(updateClientData);
       if (updateClientData != clientsArray) {
         clientsArray.map((el, i) => {
           isDefined(document.getElementById(`${el}-gen`))
@@ -34,11 +34,18 @@ const connect = () => {
         });
 
         clientsArray = updateClientData;
+        console.log(clientsArray);
+        clientsArray.map((el) => {
+          clientInfoArray.push({
+            client: el,
+            value: "false",
+          });
+        });
 
         clientsArray.map((el, i) => {
           !isDefined(document.getElementById(`${el}-gen`))
             ? generateElement(
-                undefined,
+                document.getElementById("client-grid"),
                 undefined,
                 `${el}-gen`,
                 undefined,
@@ -49,34 +56,49 @@ const connect = () => {
       }
     }
 
-    //split incoming message into an array
+    //Check for client data
     serverInfo = event.data.split(", ");
     serverInfo = {
       client: serverInfo[0],
       value: serverInfo[1] == "true", //checking string value to return true or false bool
     };
-    serverInfo.client == "Client1"
-      ? (client1info = { client: "Client1", value: serverInfo.value })
-      : (client2info = { client: "Client2", value: serverInfo.value });
+
+    // clientInfoArray.map((el) => {
+    //   el.client == serverInfo.client
+    //     ? (client4info = { clinet: el.client, value: serverInfo.value })
+    //     : null;
+    // });
+
+    const clinetValues = () => {
+      clientInfoArray.map((el) => {
+        el.client == serverInfo.client ? (el.value = serverInfo.value) : null;
+      });
+    };
+
+    clinetValues();
+
+    clientInfoArray.map((el, i) => {
+      styleClient(el, `${el.client}-gen`);
+    });
 
     //style elements
-    const styleClient = (
+    function styleClient(
       clientInfo = client1info,
-      clientName = "Client1",
       clientHTMLid = "client1",
       attribute = "background",
       primaryValue = "green",
       altValue = "red"
-    ) => {
+    ) {
       let client = document.getElementById(clientHTMLid);
       if (!clientInfo) return;
-      clientInfo.client == clientName && clientInfo.value == true
+      clientInfo.value == true
         ? (client.style[attribute] = primaryValue)
         : (client.style[attribute] = altValue);
-    };
+    }
 
-    styleClient();
-    styleClient(client2info, "Client2", "client2");
+    // styleClient();
+    // styleClient(client2info, "client2");
+    // styleClient(client3info, "client3");
 
     //console.log(event.data);
   });
