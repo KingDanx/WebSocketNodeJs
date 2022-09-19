@@ -80,24 +80,28 @@ const connect = () => {
 
     clinetValues();
 
-    clientInfoArray.map((el, i) => {
-      styleClient(el, `${el.client}-gen`);
-    });
-
     //style elements
-    function styleClient(
+    const styleClient = (
       clientInfo = client1info,
       clientHTMLid = "client1",
       attribute = "background",
       primaryValue = "green",
       altValue = "red"
-    ) {
+    ) => {
       let client = document.getElementById(clientHTMLid);
       if (!clientInfo) return;
       clientInfo.value == true
         ? (client.style[attribute] = primaryValue)
         : (client.style[attribute] = altValue);
-    }
+    };
+
+    clientInfoArray.map((el, i) => {
+      styleClient(el, `${el.client}-gen`);
+    });
+  });
+
+  clientInfoArray.map((el, i) => {
+    styleClient(el, `${el.client}-gen`);
   });
 
   socket.addEventListener("close", (event) => {
@@ -117,27 +121,25 @@ const connect = () => {
   let sec2 = 0;
 
   const clockInterval = setInterval(() => {
-    if (client1info && client2info) {
-      if (client1info.value == true && client2info.value == true) {
-        clearClockInterval();
-        sec++;
-        if (sec > 9) {
-          sec2++;
-          sec = 0;
-        }
-        if (sec2 >= 6) {
-          min++;
-          sec2 = 0;
-          sec = 0;
-        }
+    if (clientInfoArray.every((el) => el.value == true)) {
+      clearClockInterval();
+      sec++;
+      if (sec > 9) {
+        sec2++;
+        sec = 0;
       }
-      clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
+      if (sec2 >= 6) {
+        min++;
+        sec2 = 0;
+        sec = 0;
+      }
     }
+    clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
   }, 1000);
 
   const clearClockInterval = () => {
     const killInterval = setInterval(() => {
-      if (client1info.value == false || client2info.value == false) {
+      if (clientInfoArray.some((el) => el.value == false)) {
         min = 0;
         sec2 = 0;
         sec = 0;
