@@ -32,7 +32,7 @@ const connect = () => {
             ? document.getElementById(`${el}-gen`).remove()
             : null;
         });
-
+        clientInfoArray = [];
         clientsArray = updateClientData;
         console.log(clientsArray);
         clientsArray.map((el) => {
@@ -46,6 +46,14 @@ const connect = () => {
           !isDefined(document.getElementById(`${el}-gen`))
             ? generateElement(
                 document.getElementById("client-grid"),
+                undefined,
+                `${el}-gen-parent`,
+                undefined
+              )
+            : null;
+          !isDefined(document.getElementById(`${el}-gen`))
+            ? generateElement(
+                document.getElementById(`${el}-gen-parent`),
                 undefined,
                 `${el}-gen`,
                 undefined,
@@ -63,12 +71,7 @@ const connect = () => {
       value: serverInfo[1] == "true", //checking string value to return true or false bool
     };
 
-    // clientInfoArray.map((el) => {
-    //   el.client == serverInfo.client
-    //     ? (client4info = { clinet: el.client, value: serverInfo.value })
-    //     : null;
-    // });
-
+    //stores clients' info for styling
     const clinetValues = () => {
       clientInfoArray.map((el) => {
         el.client == serverInfo.client ? (el.value = serverInfo.value) : null;
@@ -95,12 +98,6 @@ const connect = () => {
         ? (client.style[attribute] = primaryValue)
         : (client.style[attribute] = altValue);
     }
-
-    // styleClient();
-    // styleClient(client2info, "client2");
-    // styleClient(client3info, "client3");
-
-    //console.log(event.data);
   });
 
   socket.addEventListener("close", (event) => {
