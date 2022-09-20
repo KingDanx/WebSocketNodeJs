@@ -1,8 +1,8 @@
 import TOKEN from "../config/config.js";
 import { generateElement, isDefined } from "./generateElement.js";
 
-const connect = () => {
-  const socket = new WebSocket("ws://localhost:3000", [TOKEN, "App"]);
+const connect = (ipPort, clientName) => {
+  const socket = new WebSocket(ipPort, [TOKEN, clientName]);
 
   // Connection opened
   socket.addEventListener("open", function (event) {
@@ -24,6 +24,7 @@ const connect = () => {
       updateClientData.sort();
       if (updateClientData != clientsArray) {
         clientsArray.map((el, i) => {
+          //this needs to be a funciton
           if (
             isDefined(document.getElementById(`${el}-gen`)) &&
             !updateClientData.includes(el)
@@ -76,12 +77,6 @@ const connect = () => {
             });
           }
         });
-        // clientInfoArray.push({
-        //   client: el,
-        //   value: "false",
-        //   min: 0,
-        //   sec: 0,
-        //   sec2: 0,
 
         clientsArray.map((el, i) => {
           !isDefined(document.getElementById(`${el}-gen-parent`))
@@ -101,15 +96,8 @@ const connect = () => {
                 `${el}`
               )
             : null;
-          // isDefined(document.getElementById(`${el}-gen`))
-          //   ? generateElement(
-          //       document.getElementById(`${el}-gen-parent`),
-          //       undefined,
-          //       `${el}-gen-clock`,
-          //       undefined,
-          //       `00:00`
-          //     )
-          //   : null;
+
+          //needs to be turned into a function
           if (isDefined(document.getElementById(`${el}-gen`))) {
             if (!isDefined(document.getElementById(`${el}-gen-clock-min2`)))
               generateElement(
@@ -227,35 +215,6 @@ const connect = () => {
         }
       } else {
       }
-
-      // if (el.value == true) {
-      //   el.sec++;
-      //   if (el.sec > 9) {
-      //     el.sec2++;
-      //     el.sec = 0;
-      //   }
-      //   if (el.sec2 >= 6) {
-      //     el.min++;
-      //     el.sec2 = 0;
-      //     el.sec = 0;
-      //   }
-      // }
-      // document.getElementById(`${el.client}-gen-clock`).innerHTML = `${
-      //   el.min <= 9 ? 0 : ""
-      // }${el.min}:${el.sec2}${el.sec}`;
-
-      // if (timeKeeper.length == 0) {
-      //   timeKeeper.push(el);
-      // } else if (timeKeeper.find((li) => li.client == el.client) == undefined) {
-      //   timeKeeper.push(el);
-      // } else {
-      //   timeKeeper.map((li) => {
-      //     if (li.client == el.client) {
-      //       li = el;
-      //       console.log(li, el);
-      //     }
-      //   });
-      // }
     });
   }, 1000);
 
@@ -305,4 +264,4 @@ const connect = () => {
   };
 };
 
-connect();
+connect("ws://localhost:3000", "App");
