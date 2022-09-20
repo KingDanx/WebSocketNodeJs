@@ -14,10 +14,6 @@ const connect = () => {
   let clientInfoArray = [];
   let updateClientData;
   let serverInfo;
-  let client1info;
-  let client2info;
-  let client3info;
-  let client4info;
 
   // Listen for messages
   socket.addEventListener("message", function (event) {
@@ -28,22 +24,67 @@ const connect = () => {
       updateClientData.sort();
       if (updateClientData != clientsArray) {
         clientsArray.map((el, i) => {
-          isDefined(document.getElementById(`${el}-gen`))
-            ? document.getElementById(`${el}-gen`).remove()
-            : null;
+          if (
+            isDefined(document.getElementById(`${el}-gen`)) &&
+            !updateClientData.includes(el)
+          ) {
+            document.getElementById(`${el}-gen`).remove();
+          }
+          if (
+            isDefined(document.getElementById(`${el}-gen-clock-min2`)) &&
+            !updateClientData.includes(el)
+          ) {
+            document.getElementById(`${el}-gen-clock-min2`).remove();
+          }
+          if (
+            isDefined(document.getElementById(`${el}-gen-clock-min`)) &&
+            !updateClientData.includes(el)
+          ) {
+            document.getElementById(`${el}-gen-clock-min`).remove();
+          }
+          if (
+            isDefined(document.getElementById(`${el}-gen-clock-colon`)) &&
+            !updateClientData.includes(el)
+          ) {
+            document.getElementById(`${el}-gen-clock-colon`).remove();
+          }
+          if (
+            isDefined(document.getElementById(`${el}-gen-clock-sec2`)) &&
+            !updateClientData.includes(el)
+          ) {
+            document.getElementById(`${el}-gen-clock-sec2`).remove();
+          }
+          if (
+            isDefined(document.getElementById(`${el}-gen-clock-sec`)) &&
+            !updateClientData.includes(el)
+          ) {
+            document.getElementById(`${el}-gen-clock-sec`).remove();
+          }
         });
         clientInfoArray = [];
         clientsArray = updateClientData;
         console.log(clientsArray);
+
         clientsArray.map((el) => {
-          clientInfoArray.push({
-            client: el,
-            value: "false",
-          });
+          if (clientInfoArray.find((li) => li.client == el) == undefined) {
+            clientInfoArray.push({
+              client: el,
+              value: "false",
+              min: 0,
+              sec: 0,
+              sec2: 0,
+            });
+          }
         });
+        // clientInfoArray.push({
+        //   client: el,
+        //   value: "false",
+        //   min: 0,
+        //   sec: 0,
+        //   sec2: 0,
 
         clientsArray.map((el, i) => {
-          !isDefined(document.getElementById(`${el}-gen`))
+          !isDefined(document.getElementById(`${el}-gen-parent`))
             ? generateElement(
                 document.getElementById("client-grid"),
                 undefined,
@@ -60,6 +101,57 @@ const connect = () => {
                 `${el}`
               )
             : null;
+          // isDefined(document.getElementById(`${el}-gen`))
+          //   ? generateElement(
+          //       document.getElementById(`${el}-gen-parent`),
+          //       undefined,
+          //       `${el}-gen-clock`,
+          //       undefined,
+          //       `00:00`
+          //     )
+          //   : null;
+          if (isDefined(document.getElementById(`${el}-gen`))) {
+            if (!isDefined(document.getElementById(`${el}-gen-clock-min2`)))
+              generateElement(
+                document.getElementById(`${el}-gen-parent`),
+                "span",
+                `${el}-gen-clock-min2`,
+                undefined,
+                `0`
+              );
+            if (!isDefined(document.getElementById(`${el}-gen-clock-min`)))
+              generateElement(
+                document.getElementById(`${el}-gen-parent`),
+                "span",
+                `${el}-gen-clock-min`,
+                undefined,
+                `0`
+              );
+            if (!isDefined(document.getElementById(`${el}-gen-clock-colon`)))
+              generateElement(
+                document.getElementById(`${el}-gen-parent`),
+                "span",
+                `${el}-gen-clock-colon`,
+                undefined,
+                `:`
+              );
+            if (!isDefined(document.getElementById(`${el}-gen-clock-sec2`)))
+              generateElement(
+                document.getElementById(`${el}-gen-parent`),
+                "span",
+                `${el}-gen-clock-sec2`,
+                undefined,
+                `0`
+              );
+            if (!isDefined(document.getElementById(`${el}-gen-clock-sec`)))
+              generateElement(
+                document.getElementById(`${el}-gen-parent`),
+                "span",
+                `${el}-gen-clock-sec`,
+                undefined,
+                `0`
+              );
+          }
         });
       }
     }
@@ -82,8 +174,8 @@ const connect = () => {
 
     //style elements
     const styleClient = (
-      clientInfo = client1info,
-      clientHTMLid = "client1",
+      clientInfo,
+      clientHTMLid,
       attribute = "background",
       primaryValue = "green",
       altValue = "red"
@@ -104,6 +196,69 @@ const connect = () => {
     styleClient(el, `${el.client}-gen`);
   });
 
+  setInterval(() => {
+    clientInfoArray.map((el) => {
+      let clientMin2 = document.getElementById(`${el.client}-gen-clock-min2`);
+      let clientMin = document.getElementById(`${el.client}-gen-clock-min`);
+      let clientSec2 = document.getElementById(`${el.client}-gen-clock-sec2`);
+      let clientSec = document.getElementById(`${el.client}-gen-clock-sec`);
+      if (el.value == true) {
+        const killInterval = setInterval(() => {
+          if (el.value == false) {
+            clientMin.innerHTML = 0;
+            clientSec2.innerHTML = 0;
+            clientSec.innerHTML = 0;
+            clearInterval(killInterval);
+          }
+        }, 100);
+
+        clientSec.innerHTML = parseInt(clientSec.innerHTML) + 1;
+        if (parseInt(clientSec.innerHTML) > 9) {
+          clientSec2.innerHTML = parseInt(clientSec2.innerHTML) + 1;
+          clientSec.innerHTML = 0;
+        }
+        if (parseInt(clientSec2.innerHTML) >= 6) {
+          clientMin.innerHTML = parseInt(clientMin.innerHTML) + 1;
+          clientSec2.innerHTML = 0;
+          clientSec.innerHTML = 0;
+        }
+        if (parseInt(clientMin.innerHTML) >= 10) {
+          clientMin2.innerHTML = "";
+        }
+      } else {
+      }
+
+      // if (el.value == true) {
+      //   el.sec++;
+      //   if (el.sec > 9) {
+      //     el.sec2++;
+      //     el.sec = 0;
+      //   }
+      //   if (el.sec2 >= 6) {
+      //     el.min++;
+      //     el.sec2 = 0;
+      //     el.sec = 0;
+      //   }
+      // }
+      // document.getElementById(`${el.client}-gen-clock`).innerHTML = `${
+      //   el.min <= 9 ? 0 : ""
+      // }${el.min}:${el.sec2}${el.sec}`;
+
+      // if (timeKeeper.length == 0) {
+      //   timeKeeper.push(el);
+      // } else if (timeKeeper.find((li) => li.client == el.client) == undefined) {
+      //   timeKeeper.push(el);
+      // } else {
+      //   timeKeeper.map((li) => {
+      //     if (li.client == el.client) {
+      //       li = el;
+      //       console.log(li, el);
+      //     }
+      //   });
+      // }
+    });
+  }, 1000);
+
   socket.addEventListener("close", (event) => {
     console.log("Disconnected from server");
     const reconnectInterval = setInterval(() => {
@@ -114,7 +269,7 @@ const connect = () => {
     }, 1000);
   });
 
-  //clock section
+  //clock section all switches == true
   let clock = document.getElementById("clock");
   let min = 0;
   let sec = 0;
