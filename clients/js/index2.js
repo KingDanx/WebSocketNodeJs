@@ -21,7 +21,7 @@ const connect = (ipPort, clientName) => {
       socket.close();
       clearInterval(switcherInterval);
       clearInterval(reconnectInterval);
-      connect();
+      connect("ws://localhost:3000", "Client2");
     }, 1000);
   });
 

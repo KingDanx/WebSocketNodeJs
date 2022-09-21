@@ -23,49 +23,13 @@ const connect = (ipPort, clientName) => {
       updateClientData.shift();
       updateClientData.sort();
       if (updateClientData != clientsArray) {
-        clientsArray.map((el, i) => {
-          if (
-            isDefined(document.getElementById(`${el}-gen`)) &&
-            !updateClientData.includes(el)
-          ) {
-            document.getElementById(`${el}-gen`).remove();
-          }
-          if (
-            isDefined(document.getElementById(`${el}-gen-clock`)) &&
-            !updateClientData.includes(el)
-          ) {
-            document.getElementById(`${el}-gen-clock`).remove();
-          }
-          // if (
-          //   isDefined(document.getElementById(`${el}-gen-clock-min2`)) &&
-          //   !updateClientData.includes(el)
-          // ) {
-          //   document.getElementById(`${el}-gen-clock-min2`).remove();
-          // }
-          // if (
-          //   isDefined(document.getElementById(`${el}-gen-clock-min`)) &&
-          //   !updateClientData.includes(el)
-          // ) {
-          //   document.getElementById(`${el}-gen-clock-min`).remove();
-          // }
-          // if (
-          //   isDefined(document.getElementById(`${el}-gen-clock-colon`)) &&
-          //   !updateClientData.includes(el)
-          // ) {
-          //   document.getElementById(`${el}-gen-clock-colon`).remove();
-          // }
-          // if (
-          //   isDefined(document.getElementById(`${el}-gen-clock-sec2`)) &&
-          //   !updateClientData.includes(el)
-          // ) {
-          //   document.getElementById(`${el}-gen-clock-sec2`).remove();
-          // }
-          // if (
-          //   isDefined(document.getElementById(`${el}-gen-clock-sec`)) &&
-          //   !updateClientData.includes(el)
-          // ) {
-          //   document.getElementById(`${el}-gen-clock-sec`).remove();
-          // }
+        clientsArray.map((el) => {
+          removeUnusedElements(`${el}-gen`, el, updateClientData);
+          removeUnusedElements(`${el}-gen-min2`, el, updateClientData);
+          removeUnusedElements(`${el}-gen-min`, el, updateClientData);
+          removeUnusedElements(`${el}-gen-colon`, el, updateClientData);
+          removeUnusedElements(`${el}-gen-sec2`, el, updateClientData);
+          removeUnusedElements(`${el}-gen-sec`, el, updateClientData);
         });
         clientInfoArray = [];
         clientsArray = updateClientData;
@@ -80,6 +44,7 @@ const connect = (ipPort, clientName) => {
           }
         });
 
+        //Generates client parent and client
         clientsArray.map((el, i) => {
           !isDefined(document.getElementById(`${el}-gen-parent`)) && el != ""
             ? generateElement(
@@ -99,56 +64,38 @@ const connect = (ipPort, clientName) => {
               )
             : null;
 
-          //needs to be turned into a function
+          //Generates clients clocks
           if (isDefined(document.getElementById(`${el}-gen`)) && el != "") {
-            if (!isDefined(document.getElementById(`${el}-gen-clock`)))
-              generateElement(
-                document.getElementById(`${el}-gen-parent`),
-                undefined,
-                `${el}-gen-clock`,
-                undefined,
-                `00:00`
-              );
-            // if (!isDefined(document.getElementById(`${el}-gen-clock-min2`)))
-            //   generateElement(
-            //     document.getElementById(`${el}-gen-parent`),
-            //     "span",
-            //     `${el}-gen-clock-min2`,
-            //     undefined,
-            //     `0`
-            //   );
-            // if (!isDefined(document.getElementById(`${el}-gen-clock-min`)))
-            //   generateElement(
-            //     document.getElementById(`${el}-gen-parent`),
-            //     "span",
-            //     `${el}-gen-clock-min`,
-            //     undefined,
-            //     `0`
-            //   );
-            // if (!isDefined(document.getElementById(`${el}-gen-clock-colon`)))
-            //   generateElement(
-            //     document.getElementById(`${el}-gen-parent`),
-            //     "span",
-            //     `${el}-gen-clock-colon`,
-            //     undefined,
-            //     `:`
-            //   );
-            // if (!isDefined(document.getElementById(`${el}-gen-clock-sec2`)))
-            //   generateElement(
-            //     document.getElementById(`${el}-gen-parent`),
-            //     "span",
-            //     `${el}-gen-clock-sec2`,
-            //     undefined,
-            //     `0`
-            //   );
-            // if (!isDefined(document.getElementById(`${el}-gen-clock-sec`)))
-            //   generateElement(
-            //     document.getElementById(`${el}-gen-parent`),
-            //     "span",
-            //     `${el}-gen-clock-sec`,
-            //     undefined,
-            //     `0`
-            //   );
+            generateMappedElements(
+              `${el}-gen-min2`,
+              `${el}-gen-parent`,
+              "0",
+              "span"
+            );
+            generateMappedElements(
+              `${el}-gen-min`,
+              `${el}-gen-parent`,
+              "0",
+              "span"
+            );
+            generateMappedElements(
+              `${el}-gen-colon`,
+              `${el}-gen-parent`,
+              ":",
+              "span"
+            );
+            generateMappedElements(
+              `${el}-gen-sec2`,
+              `${el}-gen-parent`,
+              "0",
+              "span"
+            );
+            generateMappedElements(
+              `${el}-gen-sec`,
+              `${el}-gen-parent`,
+              "0",
+              "span"
+            );
           }
         });
 
@@ -163,7 +110,6 @@ const connect = (ipPort, clientName) => {
           .forEach((val, i) => {
             wrapper.appendChild(val);
           });
-        console.log(items);
       }
     }
 
@@ -180,7 +126,6 @@ const connect = (ipPort, clientName) => {
         el.client == serverInfo.client ? (el.value = serverInfo.value) : null;
       });
     };
-
     clinetValues();
 
     //style elements
@@ -203,26 +148,19 @@ const connect = (ipPort, clientName) => {
     });
   });
 
-  clientInfoArray.map((el, i) => {
-    styleClient(el, `${el.client}-gen`);
-  });
-
-  setInterval(() => {
+  //Increment individual client clocks
+  const clientClocksInterval = setInterval(() => {
     clientInfoArray.map((el) => {
-      let min = 0;
-      let sec = 0;
-      let sec2 = 0;
-      let clock = document.getElementById(`${el}-gen-clock`);
-      let clientMin2 = document.getElementById(`${el.client}-gen-clock-min2`);
-      let clientMin = document.getElementById(`${el.client}-gen-clock-min`);
-      let clientSec2 = document.getElementById(`${el.client}-gen-clock-sec2`);
-      let clientSec = document.getElementById(`${el.client}-gen-clock-sec`);
+      // let clock = document.getElementById(`${el.client}-gen-clock`);
+
+      let clientMin2 = document.getElementById(`${el.client}-gen-min2`);
+      let clientMin = document.getElementById(`${el.client}-gen-min`);
+      let clientSec2 = document.getElementById(`${el.client}-gen-sec2`);
+      let clientSec = document.getElementById(`${el.client}-gen-sec`);
       if (el.value == true) {
         const killInterval = setInterval(() => {
           if (el.value == false) {
-            min = 0;
-            sec = 0;
-            sec2 = 0;
+            clientMin2.innerHTML = 0;
             clientMin.innerHTML = 0;
             clientSec2.innerHTML = 0;
             clientSec.innerHTML = 0;
@@ -231,30 +169,31 @@ const connect = (ipPort, clientName) => {
         }, 100);
 
         clientSec.innerHTML = parseInt(clientSec.innerHTML) + 1;
-        if (parseInt(clientSec.innerHTML) > 9) {
+        if (clientSec.innerHTML > 9) {
           clientSec2.innerHTML = parseInt(clientSec2.innerHTML) + 1;
           clientSec.innerHTML = 0;
         }
-        if (parseInt(clientSec2.innerHTML) >= 6) {
+        if (clientSec2.innerHTML > 5) {
           clientMin.innerHTML = parseInt(clientMin.innerHTML) + 1;
           clientSec2.innerHTML = 0;
           clientSec.innerHTML = 0;
         }
-        if (parseInt(clientMin.innerHTML) >= 10) {
+        if (clientMin.innerHTML > 9) {
           clientMin2.innerHTML = "";
         }
-      } else {
       }
     });
   }, 1000);
 
+  //Disconnect listner
   socket.addEventListener("close", (event) => {
     console.log("Disconnected from server");
     const reconnectInterval = setInterval(() => {
       socket.close();
       clearInterval(clockInterval);
+      clearInterval(clientClocksInterval);
       clearInterval(reconnectInterval);
-      connect();
+      connect("ws://localhost:3000", "App");
     }, 1000);
   });
 
@@ -297,3 +236,28 @@ const connect = (ipPort, clientName) => {
 };
 
 connect("ws://localhost:3000", "App");
+
+function removeUnusedElements(elementIdToRemove, elementCheck, array) {
+  if (
+    isDefined(document.getElementById(elementIdToRemove)) &&
+    !array.includes(elementCheck)
+  ) {
+    document.getElementById(elementIdToRemove).remove();
+  }
+}
+
+function generateMappedElements(
+  elementId,
+  parentElement,
+  content,
+  elementType = "div"
+) {
+  if (!isDefined(document.getElementById(elementId)))
+    generateElement(
+      document.getElementById(parentElement),
+      elementType,
+      elementId,
+      undefined,
+      content
+    );
+}
