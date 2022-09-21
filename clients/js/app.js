@@ -1,5 +1,10 @@
 import TOKEN from "../config/config.js";
-import { generateElement, isDefined } from "./generateElement.js";
+import {
+  generateElement,
+  isDefined,
+  generateMappedElements,
+  removeUnusedElements,
+} from "./generateElement.js";
 
 const connect = (ipPort, clientName) => {
   const socket = new WebSocket(ipPort, [TOKEN, clientName]);
@@ -236,28 +241,3 @@ const connect = (ipPort, clientName) => {
 };
 
 connect("ws://localhost:3000", "App");
-
-function removeUnusedElements(elementIdToRemove, elementCheck, array) {
-  if (
-    isDefined(document.getElementById(elementIdToRemove)) &&
-    !array.includes(elementCheck)
-  ) {
-    document.getElementById(elementIdToRemove).remove();
-  }
-}
-
-function generateMappedElements(
-  elementId,
-  parentElement,
-  content,
-  elementType = "div"
-) {
-  if (!isDefined(document.getElementById(elementId)))
-    generateElement(
-      document.getElementById(parentElement),
-      elementType,
-      elementId,
-      undefined,
-      content
-    );
-}

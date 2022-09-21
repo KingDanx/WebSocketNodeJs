@@ -21,6 +21,32 @@ export function generateElement(
   if (isDefined(parentEl)) parentEl.appendChild(el);
   return el;
 }
+
 export function isDefined(obj) {
   return obj !== undefined && obj != null;
+}
+
+export function removeUnusedElements(elementIdToRemove, elementCheck, array) {
+  if (
+    isDefined(document.getElementById(elementIdToRemove)) &&
+    !array.includes(elementCheck)
+  ) {
+    document.getElementById(elementIdToRemove).remove();
+  }
+}
+
+export function generateMappedElements(
+  elementId,
+  parentElement,
+  content,
+  elementType = "div"
+) {
+  if (!isDefined(document.getElementById(elementId)))
+    generateElement(
+      document.getElementById(parentElement),
+      elementType,
+      elementId,
+      undefined,
+      content
+    );
 }
