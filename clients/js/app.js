@@ -24,7 +24,6 @@ const connect = (ipPort, clientName) => {
       updateClientData.sort();
       if (updateClientData != clientsArray) {
         clientsArray.map((el, i) => {
-          //this needs to be a funciton
           if (
             isDefined(document.getElementById(`${el}-gen`)) &&
             !updateClientData.includes(el)
@@ -32,35 +31,41 @@ const connect = (ipPort, clientName) => {
             document.getElementById(`${el}-gen`).remove();
           }
           if (
-            isDefined(document.getElementById(`${el}-gen-clock-min2`)) &&
+            isDefined(document.getElementById(`${el}-gen-clock`)) &&
             !updateClientData.includes(el)
           ) {
-            document.getElementById(`${el}-gen-clock-min2`).remove();
+            document.getElementById(`${el}-gen-clock`).remove();
           }
-          if (
-            isDefined(document.getElementById(`${el}-gen-clock-min`)) &&
-            !updateClientData.includes(el)
-          ) {
-            document.getElementById(`${el}-gen-clock-min`).remove();
-          }
-          if (
-            isDefined(document.getElementById(`${el}-gen-clock-colon`)) &&
-            !updateClientData.includes(el)
-          ) {
-            document.getElementById(`${el}-gen-clock-colon`).remove();
-          }
-          if (
-            isDefined(document.getElementById(`${el}-gen-clock-sec2`)) &&
-            !updateClientData.includes(el)
-          ) {
-            document.getElementById(`${el}-gen-clock-sec2`).remove();
-          }
-          if (
-            isDefined(document.getElementById(`${el}-gen-clock-sec`)) &&
-            !updateClientData.includes(el)
-          ) {
-            document.getElementById(`${el}-gen-clock-sec`).remove();
-          }
+          // if (
+          //   isDefined(document.getElementById(`${el}-gen-clock-min2`)) &&
+          //   !updateClientData.includes(el)
+          // ) {
+          //   document.getElementById(`${el}-gen-clock-min2`).remove();
+          // }
+          // if (
+          //   isDefined(document.getElementById(`${el}-gen-clock-min`)) &&
+          //   !updateClientData.includes(el)
+          // ) {
+          //   document.getElementById(`${el}-gen-clock-min`).remove();
+          // }
+          // if (
+          //   isDefined(document.getElementById(`${el}-gen-clock-colon`)) &&
+          //   !updateClientData.includes(el)
+          // ) {
+          //   document.getElementById(`${el}-gen-clock-colon`).remove();
+          // }
+          // if (
+          //   isDefined(document.getElementById(`${el}-gen-clock-sec2`)) &&
+          //   !updateClientData.includes(el)
+          // ) {
+          //   document.getElementById(`${el}-gen-clock-sec2`).remove();
+          // }
+          // if (
+          //   isDefined(document.getElementById(`${el}-gen-clock-sec`)) &&
+          //   !updateClientData.includes(el)
+          // ) {
+          //   document.getElementById(`${el}-gen-clock-sec`).remove();
+          // }
         });
         clientInfoArray = [];
         clientsArray = updateClientData;
@@ -71,15 +76,12 @@ const connect = (ipPort, clientName) => {
             clientInfoArray.push({
               client: el,
               value: "false",
-              min: 0,
-              sec: 0,
-              sec2: 0,
             });
           }
         });
 
         clientsArray.map((el, i) => {
-          !isDefined(document.getElementById(`${el}-gen-parent`))
+          !isDefined(document.getElementById(`${el}-gen-parent`)) && el != ""
             ? generateElement(
                 document.getElementById("client-grid"),
                 undefined,
@@ -87,7 +89,7 @@ const connect = (ipPort, clientName) => {
                 undefined
               )
             : null;
-          !isDefined(document.getElementById(`${el}-gen`))
+          !isDefined(document.getElementById(`${el}-gen`)) && el != ""
             ? generateElement(
                 document.getElementById(`${el}-gen-parent`),
                 undefined,
@@ -98,49 +100,70 @@ const connect = (ipPort, clientName) => {
             : null;
 
           //needs to be turned into a function
-          if (isDefined(document.getElementById(`${el}-gen`))) {
-            if (!isDefined(document.getElementById(`${el}-gen-clock-min2`)))
+          if (isDefined(document.getElementById(`${el}-gen`)) && el != "") {
+            if (!isDefined(document.getElementById(`${el}-gen-clock`)))
               generateElement(
                 document.getElementById(`${el}-gen-parent`),
-                "span",
-                `${el}-gen-clock-min2`,
                 undefined,
-                `0`
-              );
-            if (!isDefined(document.getElementById(`${el}-gen-clock-min`)))
-              generateElement(
-                document.getElementById(`${el}-gen-parent`),
-                "span",
-                `${el}-gen-clock-min`,
+                `${el}-gen-clock`,
                 undefined,
-                `0`
+                `00:00`
               );
-            if (!isDefined(document.getElementById(`${el}-gen-clock-colon`)))
-              generateElement(
-                document.getElementById(`${el}-gen-parent`),
-                "span",
-                `${el}-gen-clock-colon`,
-                undefined,
-                `:`
-              );
-            if (!isDefined(document.getElementById(`${el}-gen-clock-sec2`)))
-              generateElement(
-                document.getElementById(`${el}-gen-parent`),
-                "span",
-                `${el}-gen-clock-sec2`,
-                undefined,
-                `0`
-              );
-            if (!isDefined(document.getElementById(`${el}-gen-clock-sec`)))
-              generateElement(
-                document.getElementById(`${el}-gen-parent`),
-                "span",
-                `${el}-gen-clock-sec`,
-                undefined,
-                `0`
-              );
+            // if (!isDefined(document.getElementById(`${el}-gen-clock-min2`)))
+            //   generateElement(
+            //     document.getElementById(`${el}-gen-parent`),
+            //     "span",
+            //     `${el}-gen-clock-min2`,
+            //     undefined,
+            //     `0`
+            //   );
+            // if (!isDefined(document.getElementById(`${el}-gen-clock-min`)))
+            //   generateElement(
+            //     document.getElementById(`${el}-gen-parent`),
+            //     "span",
+            //     `${el}-gen-clock-min`,
+            //     undefined,
+            //     `0`
+            //   );
+            // if (!isDefined(document.getElementById(`${el}-gen-clock-colon`)))
+            //   generateElement(
+            //     document.getElementById(`${el}-gen-parent`),
+            //     "span",
+            //     `${el}-gen-clock-colon`,
+            //     undefined,
+            //     `:`
+            //   );
+            // if (!isDefined(document.getElementById(`${el}-gen-clock-sec2`)))
+            //   generateElement(
+            //     document.getElementById(`${el}-gen-parent`),
+            //     "span",
+            //     `${el}-gen-clock-sec2`,
+            //     undefined,
+            //     `0`
+            //   );
+            // if (!isDefined(document.getElementById(`${el}-gen-clock-sec`)))
+            //   generateElement(
+            //     document.getElementById(`${el}-gen-parent`),
+            //     "span",
+            //     `${el}-gen-clock-sec`,
+            //     undefined,
+            //     `0`
+            //   );
           }
         });
+
+        //This is for sorting HTML collections
+        let wrapper = document.getElementById("client-grid");
+        let items = wrapper.children;
+        [].slice
+          .call(items)
+          .sort((a, b) => {
+            return a.textContent.localeCompare(b.textContent);
+          })
+          .forEach((val, i) => {
+            wrapper.appendChild(val);
+          });
+        console.log(items);
       }
     }
 
@@ -186,6 +209,10 @@ const connect = (ipPort, clientName) => {
 
   setInterval(() => {
     clientInfoArray.map((el) => {
+      let min = 0;
+      let sec = 0;
+      let sec2 = 0;
+      let clock = document.getElementById(`${el}-gen-clock`);
       let clientMin2 = document.getElementById(`${el.client}-gen-clock-min2`);
       let clientMin = document.getElementById(`${el.client}-gen-clock-min`);
       let clientSec2 = document.getElementById(`${el.client}-gen-clock-sec2`);
@@ -193,6 +220,9 @@ const connect = (ipPort, clientName) => {
       if (el.value == true) {
         const killInterval = setInterval(() => {
           if (el.value == false) {
+            min = 0;
+            sec = 0;
+            sec2 = 0;
             clientMin.innerHTML = 0;
             clientSec2.innerHTML = 0;
             clientSec.innerHTML = 0;
@@ -248,7 +278,9 @@ const connect = (ipPort, clientName) => {
         sec = 0;
       }
     }
-    clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
+    clock.innerHTML = `All True Time:  ${
+      min <= 9 ? 0 : ""
+    }${min}:${sec2}${sec}`;
   }, 1000);
 
   const clearClockInterval = () => {
