@@ -15,6 +15,8 @@ WebSocketsClient webSocket;
 void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
 {
 
+  pinMode(D4, INPUT_PULLUP);
+
 	switch (type)
 	{
 	case WStype_DISCONNECTED:
@@ -103,6 +105,14 @@ void setup()
 void loop()
 {
 	webSocket.loop();
-  webSocket.sendTXT("Arduino1, false");
+  int sensorVal = digitalRead(D4);
+  if(sensorVal == LOW){
+    webSocket.sendTXT("true");
+    Serial.println("true");
+  }
+  else{
+    webSocket.sendTXT("false");
+    Serial.println("false");
+  }
   delay(500);
 }
