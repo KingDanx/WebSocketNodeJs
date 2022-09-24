@@ -7,11 +7,13 @@ const dotenv = require("dotenv");
 let clientIds = [];
 let clientVal;
 let client1Val;
-let client2Val;
-let client3Val;
 dotenv.config();
 
 app.use(cors());
+
+function heartbeat() {
+   this.isAlive=true
+}
 
 const wss = new WebSocket.Server({ server: server });
 
@@ -28,6 +30,9 @@ wss.on("connection", function connection(ws, req) {
   let clientName = req.headers["sec-websocket-protocol"].split(", ");
   console.log("A new client Connected!");
   clientName[1] ? (ws.id = clientName[1]) : (ws.id = clientName[0]);
+  ws.isAlive = true;
+  ws.on("pong", heartbeat);
+
   wss.clients.forEach(function each(client) {
     console.log("Client.ID: " + client.id);
   });
@@ -42,6 +47,22 @@ wss.on("connection", function connection(ws, req) {
         client.send(`clientsArr, ${clientIds.join(", ")}`);
       }
     });
+    
+   
+    
+    const interval = setInterval(() => {
+        if (
+          ws.isAlive === false &&
+          ws.id.toLowerCase().includes("arduino")
+        ) {
+          console.log(ws.isAlive, 'client alive')
+          clearInterval(interval);
+          return ws.terminate();
+        }
+
+        if (ws.id.toLowerCase().includes("arduino")) ws.isAlive = false;
+        if (ws.id.toLowerCase().includes("arduino")) ws.ping();
+    }, 3000);
     //^^ Add logic to cut disconnect clients out and resend array ^^
   }
 
