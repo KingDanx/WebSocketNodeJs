@@ -15,12 +15,12 @@ WebSocketsClient webSocket;
 void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
 {
 
-  pinMode(D4, INPUT_PULLUP);
-
 	switch (type)
 	{
 	case WStype_DISCONNECTED:
 		Serial.printf("[WSc] Disconnected!\n");
+    webSocket.begin(IP, PORT, "/", PROTOCOL);
+
 		break;
 	case WStype_CONNECTED:
 	{
@@ -56,6 +56,9 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
 
 void setup()
 {
+
+   pinMode(D1, INPUT_PULLUP);
+
 	// Serial.begin(921600);
 	Serial.begin(9600);
 
@@ -98,14 +101,14 @@ void setup()
 	// ping server every 15000 ms
 	// expect pong from server within 3000 ms
 	// consider connection disconnected if pong is not received 2 times
-	//webSocket.enableHeartbeat(15000, 3000, 2);
+	webSocket.enableHeartbeat(15000, 3000, 2);
 
 }
 
 void loop()
 {
 	webSocket.loop();
-  int sensorVal = digitalRead(D4);
+  int sensorVal = digitalRead(D1);
   if(sensorVal == LOW){
     webSocket.sendTXT("true");
     Serial.println("true");
