@@ -12,6 +12,15 @@
 ESP8266WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
 
+unsigned long previousMillis  = 0;
+unsigned long currentMillis   = 0;
+int interval = 1000;
+int minute = 0;
+int minute2 = 0;
+int sec = 0;
+int sec2 = 0;
+String timer = "hi";
+
 void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
 {
 
@@ -55,9 +64,10 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
 }
 
 void setup()
-{
+{ 
 
-   pinMode(D1, INPUT_PULLUP);
+  Serial.print(timer);
+  pinMode(D1, INPUT_PULLUP);
 
 	// Serial.begin(921600);
 	Serial.begin(9600);
@@ -107,6 +117,38 @@ void setup()
 
 void loop()
 {
+  currentMillis = millis();
+  
+  if (currentMillis - previousMillis >= interval == true ) {
+    sec++;
+    if(sec > 9){
+      sec = 0;
+      sec2++;
+    }
+    if(sec2 > 5){
+      minute++;
+      sec2 = 0;
+      sec = 0;
+    }
+    if(minute > 9){
+      minute2++;
+      minute = 0;
+      sec2 = 0;
+      sec = 0;
+    }
+
+    if(sensorVal == LOW){
+      timer = String("true, ") + minute2 + String("") + minute + String(":") + sec2 + String("") + sec;
+      webSocket.sendTXT(timer);
+    }
+    else{
+      timer = String("false, ") + minute2 + String("") + minute + String(":") + sec2 + String("") + sec;
+      webSocket.sendTXT(timer);
+    }
+
+    previousMillis = currentMillis;
+  }
+
 	webSocket.loop();
   int sensorVal = digitalRead(D1);
   if(sensorVal == LOW){
@@ -118,4 +160,5 @@ void loop()
     Serial.println("false");
   }
   delay(500);
+  timer = "";
 }

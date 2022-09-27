@@ -30,11 +30,7 @@ const connect = (ipPort, clientName) => {
       if (updateClientData != clientsArray) {
         clientsArray.map((el) => {
           removeUnusedElements(`${el}-gen`, el, updateClientData);
-          removeUnusedElements(`${el}-gen-min2`, el, updateClientData);
-          removeUnusedElements(`${el}-gen-min`, el, updateClientData);
-          removeUnusedElements(`${el}-gen-colon`, el, updateClientData);
-          removeUnusedElements(`${el}-gen-sec2`, el, updateClientData);
-          removeUnusedElements(`${el}-gen-sec`, el, updateClientData);
+          removeUnusedElements(`${el}-gen-clock`, el, updateClientData);
         });
         clientInfoArray = [];
         clientsArray = updateClientData;
@@ -72,34 +68,9 @@ const connect = (ipPort, clientName) => {
           //Generates clients clocks
           if (isDefined(document.getElementById(`${el}-gen`)) && el != "") {
             generateMappedElements(
-              `${el}-gen-min2`,
+              `${el}-gen-clock`,
               `${el}-gen-parent`,
-              "0",
-              "span"
-            );
-            generateMappedElements(
-              `${el}-gen-min`,
-              `${el}-gen-parent`,
-              "0",
-              "span"
-            );
-            generateMappedElements(
-              `${el}-gen-colon`,
-              `${el}-gen-parent`,
-              ":",
-              "span"
-            );
-            generateMappedElements(
-              `${el}-gen-sec2`,
-              `${el}-gen-parent`,
-              "0",
-              "span"
-            );
-            generateMappedElements(
-              `${el}-gen-sec`,
-              `${el}-gen-parent`,
-              "0",
-              "span"
+              "00:00"
             );
           }
         });
@@ -123,12 +94,14 @@ const connect = (ipPort, clientName) => {
     serverInfo = {
       client: serverInfo[0],
       value: serverInfo[1] == "true", //checking string value to return true or false bool
+      time: serverInfo[2],
     };
 
     //stores clients' info for styling
     const clinetValues = () => {
       clientInfoArray.map((el) => {
-        el.client == serverInfo.client ? (el.value = serverInfo.value) : null;
+        el.client == serverInfo.client && (el.value = serverInfo.value);
+        el.client == serverInfo.client && (el.time = serverInfo.time);
       });
     };
     clinetValues();
@@ -142,10 +115,11 @@ const connect = (ipPort, clientName) => {
       altValue = "red"
     ) => {
       let client = document.getElementById(clientHTMLid);
+      let clock = document.getElementById(`${clientInfo.client}-gen-clock`);
       if (!clientInfo) return;
       clientInfo.value == true
         ? (client.style[attribute] = primaryValue)
-        : (client.style[attribute] = altValue);
+        : (client.style[attribute] = altValue) && (clock.innerHTML = "00:00");
     };
 
     clientInfoArray.map((el, i) => {
@@ -156,37 +130,8 @@ const connect = (ipPort, clientName) => {
   //Increment individual client clocks
   const clientClocksInterval = setInterval(() => {
     clientInfoArray.map((el) => {
-      // let clock = document.getElementById(`${el.client}-gen-clock`);
-
-      let clientMin2 = document.getElementById(`${el.client}-gen-min2`);
-      let clientMin = document.getElementById(`${el.client}-gen-min`);
-      let clientSec2 = document.getElementById(`${el.client}-gen-sec2`);
-      let clientSec = document.getElementById(`${el.client}-gen-sec`);
-      if (el.value == true) {
-        const killInterval = setInterval(() => {
-          if (el.value == false) {
-            clientMin2.innerHTML = 0;
-            clientMin.innerHTML = 0;
-            clientSec2.innerHTML = 0;
-            clientSec.innerHTML = 0;
-            clearInterval(killInterval);
-          }
-        }, 100);
-
-        clientSec.innerHTML = parseInt(clientSec.innerHTML) + 1;
-        if (clientSec.innerHTML > 9) {
-          clientSec2.innerHTML = parseInt(clientSec2.innerHTML) + 1;
-          clientSec.innerHTML = 0;
-        }
-        if (clientSec2.innerHTML > 5) {
-          clientMin.innerHTML = parseInt(clientMin.innerHTML) + 1;
-          clientSec2.innerHTML = 0;
-          clientSec.innerHTML = 0;
-        }
-        if (clientMin.innerHTML > 9) {
-          clientMin2.innerHTML = "";
-        }
-      }
+      let clock = document.getElementById(`${el.client}-gen-clock`);
+      clock.innerHTML = `${el.time}`;
     });
   }, 1000);
 
@@ -205,7 +150,7 @@ const connect = (ipPort, clientName) => {
   //clock section all switches == true
   let clock = document.getElementById("clock");
   let min = 0;
-  let sec = 0;
+  let sec = -1; //to account for data transfer time
   let sec2 = 0;
 
   const clockInterval = setInterval(() => {
@@ -222,9 +167,9 @@ const connect = (ipPort, clientName) => {
         sec = 0;
       }
     }
-    clock.innerHTML = `All True Time:  ${
-      min <= 9 ? 0 : ""
-    }${min}:${sec2}${sec}`;
+    clock.innerHTML = `All True Time:  ${min <= 9 ? 0 : ""}${min}:${sec2}${
+      sec < 0 ? 0 : sec
+    }`;
   }, 1000);
 
   const clearClockInterval = () => {
@@ -232,8 +177,10 @@ const connect = (ipPort, clientName) => {
       if (clientInfoArray.some((el) => el.value == false)) {
         min = 0;
         sec2 = 0;
-        sec = 0;
-        clock.innerHTML = `${min <= 9 ? 0 : ""}${min}:${sec2}${sec}`;
+        sec = -1;
+        clock.innerHTML = `All True Time: ${min <= 9 ? 0 : ""}${min}:${sec2}${
+          sec < 0 ? 0 : sec
+        }`;
         clearInterval(killInterval);
       }
     }, 100);

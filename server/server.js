@@ -12,7 +12,7 @@ dotenv.config();
 app.use(cors());
 
 function heartbeat() {
-   this.isAlive=true
+  this.isAlive = true;
 }
 
 const wss = new WebSocket.Server({ server: server });
@@ -47,27 +47,22 @@ wss.on("connection", function connection(ws, req) {
         client.send(`clientsArr, ${clientIds.join(", ")}`);
       }
     });
-    
-   
-    
-    const interval = setInterval(() => {
-        if (
-          ws.isAlive === false &&
-          ws.id.toLowerCase().includes("arduino")
-        ) {
-          console.log(ws.isAlive, 'client alive')
-          clearInterval(interval);
-          return ws.terminate();
-        }
 
-        if (ws.id.toLowerCase().includes("arduino")) ws.isAlive = false;
-        if (ws.id.toLowerCase().includes("arduino")) ws.ping();
+    const interval = setInterval(() => {
+      if (ws.isAlive === false && ws.id.toLowerCase().includes("arduino")) {
+        console.log(ws.isAlive, "client alive");
+        clearInterval(interval);
+        return ws.terminate();
+      }
+
+      if (ws.id.toLowerCase().includes("arduino")) ws.isAlive = false;
+      if (ws.id.toLowerCase().includes("arduino")) ws.ping();
     }, 3000);
     //^^ Add logic to cut disconnect clients out and resend array ^^
   }
 
   ws.on("message", function incoming(message) {
-    //console.log(`${ws.id}: ${message}`);
+    // console.log(`${ws.id}: ${message}`);
 
     clientIds.map((el, i) => {
       ws.id == el ? (clientVal = message) : null;
@@ -76,12 +71,13 @@ wss.on("connection", function connection(ws, req) {
     const sendClientMsgToApp = (
       clientVal = client1Val,
       clientName = "Client1",
-      targetId = "App"
+      targetId = "App",
+      time = "00:00"
     ) => {
       if (ws.id == clientName) {
         wss.clients.forEach(function each(client) {
           if (client.id == targetId && client.readyState === 1) {
-            client.send(`${ws.id}, ${clientVal}`);
+            client.send(`${ws.id}, ${clientVal}, ${time}`);
           }
         });
       }
