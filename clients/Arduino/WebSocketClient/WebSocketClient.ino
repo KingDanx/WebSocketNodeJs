@@ -143,6 +143,10 @@ void loop()
       webSocket.sendTXT(timer);
     }
     else{
+      minute2 = 0;
+      minute = 0;
+      sec2 = 0;
+      sec = 0;
       timer = String("false, ") + minute2 + String("") + minute + String(":") + sec2 + String("") + sec;
       webSocket.sendTXT(timer);
     }
