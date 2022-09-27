@@ -117,6 +117,7 @@ void setup()
 
 void loop()
 {
+  int sensorVal = digitalRead(D1);
   currentMillis = millis();
   
   if (currentMillis - previousMillis >= interval == true ) {
@@ -150,14 +151,14 @@ void loop()
   }
 
 	webSocket.loop();
-  int sensorVal = digitalRead(D1);
+
   if(sensorVal == LOW){
-    webSocket.sendTXT("true");
-    Serial.println("true");
+    timer = String("true, ") + minute2 + String("") + minute + String(":") + sec2 + String("") + sec;
+    webSocket.sendTXT(timer);
   }
   else{
-    webSocket.sendTXT("false");
-    Serial.println("false");
+    timer = String("false, ") + minute2 + String("") + minute + String(":") + sec2 + String("") + sec;
+    webSocket.sendTXT(timer);
   }
   delay(500);
   timer = "";
