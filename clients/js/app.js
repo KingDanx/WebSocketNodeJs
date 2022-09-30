@@ -152,15 +152,14 @@ const connect = (ipPort, clientName) => {
 
   const textEncoder = new TextEncoder();
   const textDecoder = new TextDecoder();
-  setInterval(() => {
+  const clockInterval = setInterval(() => {
     stringData = JSON.stringify(clientInfoArray);
-
     let typed = new Uint8Array(textEncoder.encode(stringData)).buffer;
     // let dataView = new DataView(typed);
     // console.log(dataView);
     // console.log(dataView.getUint8(108));
     clientWorker.postMessage(typed, [typed]);
-  }, 100);
+  }, 500);
 
   //clock section all switches == true
   let clock = document.getElementById("clock");

@@ -1,6 +1,7 @@
+let utf8encoder = new TextEncoder();
+let utf8decoder = new TextDecoder();
+
 onmessage = (e) => {
-  let utf8encoder = new TextEncoder();
-  let utf8decoder = new TextDecoder();
   clientInfoArray = utf8decoder.decode(e.data);
   clientInfoArray = JSON.parse(clientInfoArray);
   //   console.log(clientInfoArray);

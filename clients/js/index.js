@@ -46,6 +46,7 @@ const connect = (ipPort, clientName) => {
 
   function sendSwticher() {
     socket.send(`${switcher}, ${time}`);
+    // console.log(time);
   }
 };
 
