@@ -149,9 +149,6 @@ const connect = (ipPort, clientName) => {
 
   //clock section all switches == true
   let clock = document.getElementById("clock");
-  let min = 0;
-  let sec = -1; //to account for data transfer time
-  let sec2 = 0;
 
   const clockInterval = setInterval(() => {
     let min = 0;
@@ -168,12 +165,7 @@ const connect = (ipPort, clientName) => {
   const clearClockInterval = () => {
     const killInterval = setInterval(() => {
       if (clientInfoArray.some((el) => el.value == false)) {
-        min = 0;
-        sec2 = 0;
-        sec = -1;
-        clock.innerHTML = `All True Time: ${min <= 9 ? 0 : ""}${min}:${sec2}${
-          sec < 0 ? 0 : sec
-        }`;
+        clock.innerHTML = `All True Time: 00:00`;
         clearInterval(killInterval);
       }
     }, 100);
