@@ -20,6 +20,7 @@ const connect = (ipPort, clientName) => {
   let clientInfoArray = [];
   let updateClientData;
   let serverInfo;
+  let stringData;
 
   // Listen for messages
   socket.addEventListener("message", function (event) {
@@ -150,8 +151,16 @@ const connect = (ipPort, clientName) => {
     }, 1000);
   });
 
+  const textEncoder = new TextEncoder();
+  const textDecoder = new TextDecoder();
   setInterval(() => {
-    clientWorker.postMessage(clientInfoArray);
+    stringData = JSON.stringify(clientInfoArray);
+
+    let typed = new Uint8Array(textEncoder.encode(stringData)).buffer;
+    // let dataView = new DataView(typed);
+    // console.log(dataView);
+    // console.log(dataView.getUint8(108));
+    clientWorker.postMessage(typed, typed);
   }, 100);
 
   //clock section all switches == true
@@ -168,7 +177,8 @@ const connect = (ipPort, clientName) => {
 
   clientWorker.onmessage = (e) => {
     clearClockInterval();
-    clock.innerHTML = `All True Time:  ${e.data}`;
+    let time = textDecoder.decode(e.data);
+    clock.innerHTML = `All True Time:  ${time.replaceAll('"', "")}`;
   };
 };
 
