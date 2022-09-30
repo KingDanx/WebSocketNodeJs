@@ -8,6 +8,7 @@ import {
 
 const connect = (ipPort, clientName) => {
   const socket = new WebSocket(ipPort, [TOKEN, clientName]);
+  const clientWorker = new Worker("../js/clientWorker.js");
 
   // Connection opened
   socket.addEventListener("open", function (event) {
@@ -140,26 +141,17 @@ const connect = (ipPort, clientName) => {
     console.log("Disconnected from server");
     const reconnectInterval = setInterval(() => {
       socket.close();
+      clientWorker.terminate();
       clearInterval(clockInterval);
       clearInterval(clientClocksInterval);
       clearInterval(reconnectInterval);
+
       connect("ws://localhost:3000", "App");
     }, 1000);
   });
 
-  //clock section all switches == true
-  let clock = document.getElementById("clock");
-
-  const clockInterval = setInterval(() => {
-    let min = 0;
-    if (clientInfoArray.every((el) => el.value == true)) {
-      clearClockInterval();
-      let times = [];
-      clientInfoArray.map((el) => times.push(el.time));
-      times = times.map((el) => parseInt(el.replace(":", "")));
-      min = times.indexOf(Math.min(...times));
-      clock.innerHTML = `All True Time:  ${clientInfoArray[min].time}`;
-    }
+  setInterval(() => {
+    clientWorker.postMessage(clientInfoArray);
   }, 1000);
 
   const clearClockInterval = () => {
@@ -170,6 +162,14 @@ const connect = (ipPort, clientName) => {
       }
     }, 100);
   };
+
+  clientWorker.onmessage = (e) => {
+    clearClockInterval();
+    clock.innerHTML = `All True Time:  ${e.data}`;
+  };
+
+  //clock section all switches == true
+  let clock = document.getElementById("clock");
 };
 
 connect("ws://localhost:3000", "App");
