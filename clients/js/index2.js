@@ -9,7 +9,7 @@ let switcher = false;
 // Create WebSocket connection.
 const connect = (ipPort, clientName) => {
   const socket = new WebSocket(ipPort, [TOKEN, clientName]);
-  const switcherInterval = setInterval(sendSwticher, 100);
+  const switcherInterval = setInterval(sendSwticher, 500);
   // Connection opened
   socket.addEventListener("open", function (event) {
     console.log("Connected to WS Server");
