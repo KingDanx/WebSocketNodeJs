@@ -154,22 +154,15 @@ const connect = (ipPort, clientName) => {
   let sec2 = 0;
 
   const clockInterval = setInterval(() => {
+    let min = 0;
     if (clientInfoArray.every((el) => el.value == true)) {
       clearClockInterval();
-      sec++;
-      if (sec > 9) {
-        sec2++;
-        sec = 0;
-      }
-      if (sec2 >= 6) {
-        min++;
-        sec2 = 0;
-        sec = 0;
-      }
+      let times = [];
+      clientInfoArray.map((el) => times.push(el.time));
+      times = times.map((el) => parseInt(el.replace(":", "")));
+      min = times.indexOf(Math.min(...times));
+      clock.innerHTML = `All True Time:  ${clientInfoArray[min].time}`;
     }
-    clock.innerHTML = `All True Time:  ${min <= 9 ? 0 : ""}${min}:${sec2}${
-      sec < 0 ? 0 : sec
-    }`;
   }, 1000);
 
   const clearClockInterval = () => {
