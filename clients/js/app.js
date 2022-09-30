@@ -134,7 +134,7 @@ const connect = (ipPort, clientName) => {
       let clock = document.getElementById(`${el.client}-gen-clock`);
       clock.innerHTML = `${!el.time ? "00:00" : el.time}`;
     });
-  }, 1000);
+  }, 100);
 
   //Disconnect listner
   socket.addEventListener("close", (event) => {
@@ -152,7 +152,10 @@ const connect = (ipPort, clientName) => {
 
   setInterval(() => {
     clientWorker.postMessage(clientInfoArray);
-  }, 1000);
+  }, 100);
+
+  //clock section all switches == true
+  let clock = document.getElementById("clock");
 
   const clearClockInterval = () => {
     const killInterval = setInterval(() => {
@@ -167,9 +170,6 @@ const connect = (ipPort, clientName) => {
     clearClockInterval();
     clock.innerHTML = `All True Time:  ${e.data}`;
   };
-
-  //clock section all switches == true
-  let clock = document.getElementById("clock");
 };
 
 connect("ws://localhost:3000", "App");
