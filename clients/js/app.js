@@ -131,7 +131,7 @@ const connect = (ipPort, clientName) => {
   const clientClocksInterval = setInterval(() => {
     clientInfoArray.map((el) => {
       let clock = document.getElementById(`${el.client}-gen-clock`);
-      clock.innerHTML = `${el.time}`;
+      clock.innerHTML = `${!el.time ? "00:00" : el.time}`;
     });
   }, 1000);
 
