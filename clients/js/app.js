@@ -36,7 +36,6 @@ const connect = (ipPort, clientName) => {
         });
         clientInfoArray = [];
         clientsArray = updateClientData;
-        console.log(clientsArray);
 
         clientsArray.map((el) => {
           if (clientInfoArray.find((li) => li.client == el) == undefined) {
