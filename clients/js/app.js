@@ -160,7 +160,7 @@ const connect = (ipPort, clientName) => {
     // let dataView = new DataView(typed);
     // console.log(dataView);
     // console.log(dataView.getUint8(108));
-    clientWorker.postMessage(typed, typed);
+    clientWorker.postMessage(typed, [typed]);
   }, 100);
 
   //clock section all switches == true

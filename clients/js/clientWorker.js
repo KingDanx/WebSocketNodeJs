@@ -13,6 +13,6 @@ onmessage = (e) => {
     min = times.indexOf(Math.min(...times));
     min = JSON.stringify(clientInfoArray[min].time);
     min = new Uint8Array(utf8encoder.encode(min)).buffer;
-    postMessage(min, min);
+    postMessage(min, [min]);
   }
 };
